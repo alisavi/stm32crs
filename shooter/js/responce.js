@@ -3,18 +3,21 @@ cvs.height = window.innerHeight;//-window.innerHeight%240;
 cvs.width = window.innerWidth;//-window.innerWidth%256;
 var ctx = cvs.getContext("2d");
 ctx.imageSmoothingEnabled = false;
+var k = {x: window.innerHeight/240, y: window.innerWidth/256}
+
 var centX = cvs.width/2;
 var centY = cvs.height/2;
 var xPos = cvs.width/4;
 var yPos = cvs.height/4;
 var aimxy = {x: centX, y: centY, tap: false, hold: false};
 var shot = {a: 100, shot: false};
+var duck = {x: centX/2, y: cvs.height, fly: 0, shot: false};
 
 var bird = new Image();
 var bg = new Image();
 var aim = new Image();
 
-bird.src = "/img/bird.png";
+bird.src = "/img/ducks.png";
 bg.src = "/img/scenes.png";
 aim.src = "/img/aim.png";
 
@@ -32,11 +35,24 @@ function drawCanv() {
     ctx.drawImage(bg, 0, 0, 256, 240, 0, 0, cvs.width, cvs.height);
 }
 
+function flyDuck(duck) {
+    ctx.drawImage(bird, 0 + (duck.fly-duck.fly%10)/10*36, 0, 36, 40, duck.x, duck.y, 36*k.x, 40*k.x);
+    duck.x = (duck.x+1);
+    duck.y = (duck.y-1);
+    duck.fly = (duck.fly+1)%30;
+}
+
 function draw(aimxy) {
     // Какой-либо код
-    ctx.drawImage(bird, 500, 600);
+
+    flyDuck(duck);
+    //duck.x += 10;
+    //duck.y += 30;
+    //duck.x = duck.x+10;
+    //duck.y = duck.y-30;
 
     ctx.drawImage(aim, aimxy.x, aimxy.y);
+
 
     //requestAnimationFrame(draw); // Вызов функции постоянно
 }
