@@ -7,14 +7,25 @@ var k = {x: window.innerHeight/240, y: window.innerWidth/256};
 
 var centX = cvs.width/2;
 var centY = cvs.height/2;
-var xPos = cvs.width/4;
-var yPos = cvs.height/4;
+
 var aimxy = {x: 0, y: 0, press: 0, hold: 0};
 var shot = {a: 100, shot: false};
-var duck1 = {x: centX/2, y: cvs.height, fly: 0, col: 0, type: 0, dir: 1};
-var duck2 = {x: 0, y: cvs.height/4, fly: 0, col: 1, type: 1, dir: 0};
-var duck4 = {x: centX/4, y: cvs.height/4, fly: 0, col: 2, type: 2, dir: 0};
-var duck3 = {x: centX/4, y: cvs.height, fly: 0, col: 2, type: 0, dir: 0};
+
+class Duck {
+    constructor(x, y, fly, col, type, dir) {
+        this.x = x;
+        this.y = y;
+        this.fly = fly;
+        this.col = col;
+        this.type = type;
+        this.dir = dir;
+    }
+}
+
+var duck1 = new Duck (centX/2, cvs.height,   0, 0, 0, 1);
+var duck2 = new Duck (0,       cvs.height/4, 0, 1, 1, 0);
+var duck4 = new Duck (centX/4, cvs.height/4, 0, 2, 2, 0);
+var duck3 = new Duck (centX/4, cvs.height,   0, 2, 0, 0);
 
 var bird = new Image();
 var bg = new Image();
@@ -40,12 +51,12 @@ function collisionCheck(duck) {
 function flyDuck(duck) {
     if ((duck.x > cvs.width) || (duck.y > cvs.height) || (duck.y < -40*k.y)) {
         var duck1 = {x: centX/2, y: cvs.height, fly: 0, col: 2, type: 0, dir: 0};
-        duck.x = duck.x%cvs.width;
+        duck.x    = (duck.x-300*(duck.type + 1))*(duck.type - 1)%cvs.width;
         duck.type = duck.type%2;
-        duck.y = cvs.height-duck.type*3*cvs.height/4;
-        duck.col = (duck.col + 1)%3; 
+        duck.y    = cvs.height-duck.type*3*cvs.height/4;
+        duck.col  = (duck.col + 1)%3; 
     }
-    if ((aimxy.press === 1) && collisionCheck(duck)) {
+    if ((aimxy.press === 1) && collisionCheck(duck) && (duck.type < 2)) {
         duck.type = 2;
     } else if (aimxy.press === 1) {
         duck.dir = (duck.dir + 1)%4;

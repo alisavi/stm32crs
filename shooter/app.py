@@ -23,13 +23,15 @@ def get_image(image):
 @app.route('/get_data')
 def data():
     global x, y
-    x += random.randint(-32, 32)
-    y += random.randint(-32, 32)
-    x = max(0, x)
-    x = min(x, 1920 - 1)
-    y = max(0, y)
-    y = min(y, 1080 - 1)
-    a = {"x": x, "y": y}
+    #x += random.randint(-32, 32)
+    #y += random.randint(-32, 32)
+    x = (x+20) % 1920
+    y = (y+3) % 720
+    #x = max(0, x)
+    #x = min(x, 1920 - 1)
+    #y = max(0, y)
+    #y = min(y, 720 - 1)
+    a = {"x": x, "y": y, "press": 1, "hold": 0} # if random.randint(0, 100000) >= 99999 else 0
     return json.dumps(a)
 
 if __name__ == "__main__":

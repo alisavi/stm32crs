@@ -82,6 +82,21 @@ int main() {
     SysTick->LOAD = CoreFrequency / IntFrequency - 1;
     SysTick->CTRL = SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_TICKINT_Msk;
 
+    void initSysTick (uint16_t val) {
+        SysTick->VAL  = val;
+        SysTick->LOAD = UINT16_MAX - 1;
+        SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
+    }
+    void delaySysTick (uint32_t delayms) {
+        uint32_t cntTicks = delayms * 1000;
+        uint32_t cntCtrls = 0;
+        while (cntCtrls*UINT16_MAX < cntTicks) {
+            while (!(SysTick->CTRL &= SysTick_CTRL_COUNTFLAG_Msk)) {
+            }
+            cntCtrls += 1;
+        }
+    }
+
     bool flag = 0;
 
     while(1){
